@@ -1,75 +1,42 @@
-import { VALUE, ANNOUNCE, HTML, APPLY_PROPS } from "../consts.js";
-import { tError } from "../tError.js";
-import { withValue, findJsVars, templateToFunc } from "../funcs.js";
-import { Observable } from "./Observable.js";
-import { ObservableValue } from "./ObservableValue.js";
+import { APPLY_PROPS, RAWC, RAWO } from "../consts/symbols.js";
+import { PROXY } from "../consts/proxy.js";
+import { findJsVars, templateToFunc } from "../funcs.js";
 
 export class Template {
 
-    static create(lines, ...keys) {
-        return new Template(lines, keys);
-    }
-
     constructor(lines, keys) {
-        this.callbacks = new Proxy(Object.create(null), {
-            defineProperty(dest, prop) {
-                tError.e801("this.callbacks", prop);
-                return true;
-            },
-            get(dest, prop) {
-                return dest[prop];
-            },
-            set(dest, prop, val) {
-                val.id = Symbol();
-                Object.defineProperty(dest, prop, withValue(val, true));
-                return true;
-            }
-        });
-        this.observables = new Proxy(Object.create(null), {
-            defineProperty(dest, prop) {
-                tError.e801("this.observables", prop);
-                return true;
-            },
-            get(dest, prop) {
-                return new ObservableValue(dest[prop]);
-            },
-            set(dest, prop, val) {
-                if (dest[prop]) {
-                    dest[prop][VALUE] = val;
-                } else {
-                    dest[prop] = new Observable(val);
-                }
-
-                dest[prop][ANNOUNCE]();
-                return true;
-            }
-        });
+        this[RAWC] = Object.create(null);
+        this[RAWO] = Object.create(null);
+        this.callbacks = new Proxy(this[RAWC], PROXY.callbacks);
+        this.observables = new Proxy(this[RAWO], PROXY.observables);
+        this.properties = {};
 
         let counter = 0;
-        this.properties = {};
-        console.log(keys)
-        keys[0].forEach((key, index) => {
-            if (typeof key === "string") {
+        keys.forEach((key, index) => {
+            switch(typeof key) {
+            case "string":
                 this.properties[key] = ``;
-            } else {
-                if (typeof key === "function") {
-                    this.properties[`cProp${counter}`] = key();
-                } else if (typeof key === "object") {
-                    this.properties[`cProp${counter}`] = key.$;
-                } else {
-                    this.properties[`cProp${counter}`] = key;
-                }
-                keys[0][index] = `cProp${counter}`;
+                break;
+            case "function":
+                this.properties[`cProp${counter}`] = key();
+                break;
+            case "object":
+                this.properties[`cProp${counter}`] = key.$;
+                break;
+            default:
+                this.properties[`cProp${counter}`] = key;
+                keys[index] = `cProp${counter}`;
                 counter += 1;
             }
-
         });
+
         console.log(this.properties);
 
-        this[APPLY_PROPS] = () => {
-            return templateToFunc(lines, keys)(this.properties);
-        }
-        this[HTML] = lines;
+        this[APPLY_PROPS] = templateToFunc(lines, keys);
+        this.elements = [];
+
+        let matcher = findJsVars(lines.join("."));
+        matcher.forEach(name => this.elements.push(name));
 
         return this;
     }
@@ -84,38 +51,11 @@ export class Template {
         customElements.define(`d-${this.Name}`, class extends HTMLElement {});
         this.element = document.createElement(`d-${this.Name}`);
 
-        this.elements = {};
-        let matcher = findJsVars(this[HTML].join("."));
-        matcher.forEach(name => {
-            Object.defineProperty(this.elements, name, {
-                get: () => this.element.querySelector(`[jayes-name="${name}"]`),
-                set: () => {},
-                enumerable: true,
-                configurable: false,
-            })
-        });
-
         return this;
     }
 
     setOnLoad(func) {
         this.onLoad = func;
-
-        return this;
-    }
-
-    setCallbacks(callbacks) {
-        Object.entries(callbacks).forEach(([name, func]) => {
-            this.callbacks[name] = func;
-        });
-
-        return this;
-    }
-
-    setObservables(observables) {
-        Object.entries(observables).forEach(([name, func]) => {
-            this.observables[name] = func();
-        });
 
         return this;
     }

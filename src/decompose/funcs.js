@@ -25,7 +25,7 @@ export function templateToFunc(lines, keys) {
     return (dictvals) => {
         let retval = lines[0];
         console.log(keys);
-        keys[0].forEach((key, index) => {
+        keys.forEach((key, index) => {
             retval += dictvals[key] ? dictvals[key] : ``;
             retval += lines[index + 1];
         });

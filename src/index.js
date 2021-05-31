@@ -1,9 +1,9 @@
 "use strict";
 
-import { newComponent, componentsRegistry } from "./decompose/newComponent.js";
+import { newComponent, components } from "./decompose/newComponent.js";
 
 export let de = {
-    components: componentsRegistry,
+    components: components,
     compose: newComponent, //// TODO: add style property
     //// TODO: router
 }

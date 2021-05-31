@@ -1,4 +1,4 @@
-import { VALUE, OBSERVERS, ANNOUNCE, ADD, DELETE } from "../consts.js";
+import { VALUE, OBSERVERS, ANNOUNCE, ADD, DELETE } from "../consts/symbols.js";
 
 export class Observable {
     constructor(value) {

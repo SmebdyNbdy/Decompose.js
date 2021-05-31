@@ -1,4 +1,4 @@
-import { VALUE, ADD, DELETE } from "../consts.js";
+import { VALUE, ADD, DELETE } from "../consts/symbols.js";
 import { withValue } from "../funcs.js";
 import { tError } from "../tError.js";
 

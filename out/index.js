@@ -1,1 +1,1 @@
-"use strict";import{newComponent,componentsRegistry}from"./decompose/newComponent.js";export let de={components:componentsRegistry,compose:newComponent};
+"use strict";import{newComponent,components}from"./decompose/newComponent.js";export let de={components:components,compose:newComponent};
