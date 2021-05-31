@@ -1,0 +1,1 @@
+export const tError={e801(e,t){console.log(`TERROR-801::Attempted to use Object.defineProperty on ${e}, please use the default setter ('${e}.${t} = ') instead`)},e821(e){console.log(`TERROR-821::${e} is not a valid callback!`)}};

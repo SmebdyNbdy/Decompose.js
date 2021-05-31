@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+<head>
+    <title>speed test</title>
+    <script>
+        customElements.define("decompose-app", class decomposeApp extends HTMLElement {});
+    </script>
+</head>
+<body>
+    <decompose-app jayes-page="init"></decompose-app>
+
+    <script type="module">
+        import { decompose } from "http://alexs-macbook-pro.local:5757/decompose.modern.js";
+
+        decompose.newComponent
+            `<a href="${'href'}" class="${'className'}">
+                <svg class="spriteIcon">
+                    <use href="http://alexs-macbook-pro.local:5757/icon.svg#tabler-${'icon'}"></use>
+                </svg>
+            </a>`
+        ({
+            name: "icon",
+        });
+
+        decompose.newComponent
+            `<a href="${'href'}" class="${'className'}">${'label'}</a>`
+        ({
+            name: "link",
+        });
+
+        const LINK = decompose.components.link;
+        decompose.newComponent
+            `<nav class="header">
+                <${'icon1'}>
+                <div class="head-brcr selnone">
+                    <a class="head-sep">${{$: "@" }}</a>
+                    <${ (() => LINK({
+                            href: "/",
+                            className: "head-bttn",
+                            label: "Lampa.School",
+                        }).asProperty()) }>
+                    <a class="head-sep">${{$: "/" }}</a>
+                </div>
+                <${'icon2'}>
+                <${{ $: LINK({
+                        href: "/profile/login/",
+                        className: "dsk",
+                        label: "Войти",
+                    }).asProperty() }}>
+                <${{ $: LINK({
+                        href: "/profile/register/",
+                        className: "dsk",
+                        label: "Регистрация",
+                    }).asProperty() }}>
+            </nav>`
+        ({
+            name: "header",
+        });
+
+        let tmp = decompose.components
+            .header({
+                icon1: decompose.components.icon({
+                    icon: `arrow-big-left`,
+                }).asProperty(),
+                icon2: decompose.components.icon({
+                    href: `/profile/`,
+                    className: `mob`,
+                    icon: `user`,
+                }).asProperty(),
+            });
+        console.log(tmp.asProperty());
+
+        document.getElementsByTagName("decompose-app")[0].outerHTML = `<${tmp.asProperty()}>`;
+    </script>
+</body>
+</html>
