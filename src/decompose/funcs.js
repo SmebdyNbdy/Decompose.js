@@ -30,6 +30,8 @@ export function templateToFunc(lines, keys) {
             retval += lines[index + 1];
         });
 
-        return retval;
+        let parser = new DOMParser();
+
+        return parser.parseFromString(retval, "text/html").body.firstChild;
     }
 }

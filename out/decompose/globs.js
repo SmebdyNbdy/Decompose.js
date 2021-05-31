@@ -1,0 +1,1 @@
+function*GID(){let t=0;for(;;)yield`GID${t}${Date.now()}${t}`,t+=1}const gidGetter=GID();export var gid={val:"",get(){return this.val=gidGetter.next().value,this.val}};

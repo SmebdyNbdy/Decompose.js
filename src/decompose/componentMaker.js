@@ -22,22 +22,56 @@ export function componentMaker(args) {
 
     class Instance {
         constructor(properties) {
+            /**
+             * APPLY PROPERTIES AND COMPONENT PROPERTIES
+             **/
             this.properties = {};
-            Object.assign(this.properties, component.properties);
-            Object.entries(properties).forEach( ([key, val]) => {
-                if (val) this.properties[key] = val;
-            });
-            console.log(component.properties);
-            console.log(this.properties);
+            let propComponents = {};
 
+            Object.assign(this.properties, component.properties);
+            if (properties && properties.components) {
+                Object.assign(propComponents, properties.components);
+                delete properties.components;
+            } else {
+                Object.assign(propComponents, component.properties.components);
+            }
+
+            if (properties) {
+                Object.entries(properties).forEach( ([key, val]) => {
+                    if (val) this.properties[key] = val;
+                });
+            }
+
+            //console.log(component.properties);
+            //console.log(this.properties);
+            /****/
+
+            /**
+             * CREATE ROOT ELEMENT AND APPEND ALL OTHER ELEMENTS TO IT
+             **/
             this.element = document.createElement(`d-${component.name}`);
-            this.element.innerHTML = component[APPLY_PROPS](this.properties);
+            this.element.appendChild(component[APPLY_PROPS](this.properties));
+
+            Object.entries(propComponents).forEach( ([key, val]) => {
+                let tmp = this.element.querySelector(this.properties.components[key]);
+                if (tmp) {
+                    if (val && (typeof val === "object")) {
+                        tmp.insertAdjacentElement("afterend", val.element);
+                        if (val.onLoad) val.onLoad();
+                    }
+                    tmp.remove();
+                }
+            })
 
             this.elements = {};
             component.elements.forEach(name => {
                 this.elements[name] = this.element.querySelector(`[jayes-name="${name}"]`);
             });
+            /****/
 
+            /**
+             * BIND FUNCTIONS FROM THE TEMPLATE
+             **/
             this.callbacks = new Proxy(Object.create(null), PROXY.callbacks);
             Object.entries(component[RAWC]).forEach( ([key, val]) => {
                 let value = val.bind(this);
@@ -50,6 +84,7 @@ export function componentMaker(args) {
 
             let onLoadCall = component.onLoad;
             if (onLoadCall) this.onLoad = onLoadCall.bind(this);
+            /****/
 
             return this;
         }
@@ -57,22 +92,15 @@ export function componentMaker(args) {
         get name() {
             return component.name;
         }
-        get asProp() {
-            let tmpString = this.element.outerHTML;
-            tmpString = tmpString
-                .replaceAll(/^</g, "")
-                .replaceAll(/>$/g, "");
-            return tmpString;
-        }
 
         toString() {
-            return this.asProp;
+            return this.element.outerHTML;
         }
         toLocaleString() {
-            return this.asProp;
+            return this.element.outerHTML;
         }
         valueOf() {
-            return this.asProp;
+            return this.element;
         }
     }
 
