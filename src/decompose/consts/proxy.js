@@ -1,6 +1,6 @@
 import { VALUE, ANNOUNCE } from "./symbols.js";
 import { tError } from "../tError.js";
-import { withValue } from "../funcs.js";
+import { withValue, ruleInserter } from "../funcs.js";
 import { Observable } from "../classes/Observable.js";
 import { ObservableValue } from "../classes/ObservableValue.js";
 
@@ -48,5 +48,21 @@ export const PROXY = {
         set() {
             return true;
         },
+    },
+    style: {
+        get(dest, prop) {
+            ruleInserter(dest, prop);
+
+            return (p, v) => {
+                dest[prop].style.setProperty(p, v);
+            }
+        },
+        set(dest, prop, [key, val]) {
+            ruleInserter(dest, prop);
+
+            dest[prop].style.setProperty(key, val);
+
+            return true;
+        }
     }
 }

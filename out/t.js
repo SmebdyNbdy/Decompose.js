@@ -1,0 +1,1 @@
+export default function(){let f=f=>{let t=f[0];return{a100:`#${t}`,a075:`#${t}bf`,a050:`#${t}7f`,a025:`#${t}3f`}},t={prim:f`f7b24a`,scnd:f`106570`,warn:f`f74a55`,text:f`000000`,bckg:f`ffffff`,bxsh:f`02132c`};this.globs.style=t}

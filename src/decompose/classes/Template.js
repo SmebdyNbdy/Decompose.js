@@ -1,7 +1,10 @@
 import { APPLY_PROPS, RAWC, RAWO } from "../consts/symbols.js";
 import { PROXY } from "../consts/proxy.js";
-import { findJsVars, templateToFunc } from "../funcs.js";
+import { findJsVars, templateToFunc, literalParser } from "../funcs.js";
 import { gid } from "../globs.js";
+import { Style } from "./Style.js";
+
+var style = new Style();
 
 export class Template {
 
@@ -44,11 +47,13 @@ export class Template {
 
         console.log(this.properties);
 
-        this[APPLY_PROPS] = templateToFunc(lines, keys);
         this.elements = [];
+        let matcher = findJsVars(lines);
+        matcher.names.forEach(name => this.elements.push(name));
 
-        let matcher = findJsVars(lines.join("."));
-        matcher.forEach(name => this.elements.push(name));
+        this[APPLY_PROPS] = templateToFunc(matcher.lines, keys);
+
+        console.log(matcher);
 
         return this;
     }
@@ -57,11 +62,17 @@ export class Template {
         return this.Name;
     }
 
+    setStyle(raw) {
+        this.style = literalParser(raw, `de-${this.Name}`);
+
+        style.setStyle(this.style);
+    }
+
     setName(name) {
         this.Name = name;
 
-        customElements.define(`d-${this.Name}`, class extends HTMLElement {});
-        this.element = document.createElement(`d-${this.Name}`);
+        customElements.define(`de-${this.Name}`, class extends HTMLElement {});
+        this.element = document.createElement(`de-${this.Name}`);
 
         return this;
     }

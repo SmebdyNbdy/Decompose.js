@@ -8,6 +8,8 @@ export function componentMaker(args) {
 
     if (args.onLoad)
         component.setOnLoad(args.onLoad);
+    if (args.style)
+        component.setStyle(args.style);
 
     if (args.callbacks) {
         Object.entries(args.callbacks).forEach( ([key, val]) => {
@@ -20,7 +22,7 @@ export function componentMaker(args) {
         });
     }
 
-    class Instance {
+    class ComponentInstance {
         constructor(properties) {
             /**
              * APPLY PROPERTIES AND COMPONENT PROPERTIES
@@ -49,7 +51,7 @@ export function componentMaker(args) {
             /**
              * CREATE ROOT ELEMENT AND APPEND ALL OTHER ELEMENTS TO IT
              **/
-            this.element = document.createElement(`d-${component.name}`);
+            this.element = document.createElement(`de-${component.name}`);
             this.element.appendChild(component[APPLY_PROPS](this.properties));
 
             Object.entries(propComponents).forEach( ([key, val]) => {
@@ -65,7 +67,8 @@ export function componentMaker(args) {
 
             this.elements = {};
             component.elements.forEach(name => {
-                this.elements[name] = this.element.querySelector(`[jayes-name="${name}"]`);
+                console.log(`[de-name="${name}"]`);
+                this.elements[name] = this.element.querySelector(`[de-name="${name}"]`);
             });
             /****/
 
@@ -104,5 +107,5 @@ export function componentMaker(args) {
         }
     }
 
-    return Instance;
+    return ComponentInstance;
 }

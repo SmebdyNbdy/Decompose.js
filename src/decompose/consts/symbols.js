@@ -8,4 +8,7 @@ export const DELETE = Symbol();
 export const RAWC = Symbol();
 export const RAWO = Symbol();
 export const ELEMENT = Symbol();
+export const SHEET = Symbol();
+export const RULES = Symbol();
+export const QUERIES = Symbol();
 export const APPLY_PROPS = Symbol();
