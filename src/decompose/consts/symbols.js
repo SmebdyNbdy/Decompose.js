@@ -5,6 +5,7 @@ export const ADD = Symbol();
 export const DELETE = Symbol();
 //export const HTML = Symbol();
 //export const LINES = Symbol();
+export const WILLSTARTLOADING = Symbol();
 export const RAWC = Symbol();
 export const RAWO = Symbol();
 export const ELEMENT = Symbol();

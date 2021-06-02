@@ -8,4 +8,5 @@ For more info see our [wiki](https://github.com/SmebdyNbdy/Decompose.js/wiki)!
 ****
 
 Licensed under BSD 2-Clause License
+
 Copyright (c) Alexander Gavrikov

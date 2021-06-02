@@ -1,0 +1,1 @@
+import{PROXY}from"../consts/proxy.js";import{componentMaker}from"../componentMaker.js";let componentsRegistry=Object.create(null);export var components=new Proxy(componentsRegistry,PROXY.components);export function newComponent(o,...n){return e=>(e.lines=o,e.keys=n,componentsRegistry[e.name]=componentMaker(e),components)}

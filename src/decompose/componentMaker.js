@@ -43,9 +43,6 @@ export function componentMaker(args) {
                     if (val) this.properties[key] = val;
                 });
             }
-
-            //console.log(component.properties);
-            //console.log(this.properties);
             /****/
 
             /**
@@ -53,19 +50,20 @@ export function componentMaker(args) {
              **/
             this.element = document.createElement(`de-${component.name}`);
             this.element.appendChild(component[APPLY_PROPS](this.properties));
+            this.elements = { components: {} };
 
             Object.entries(propComponents).forEach( ([key, val]) => {
                 let tmp = this.element.querySelector(this.properties.components[key]);
                 if (tmp) {
                     if (val && (typeof val === "object")) {
                         tmp.insertAdjacentElement("afterend", val.element);
+                        this.elements.components[key] = val;
                         if (val.onLoad) val.onLoad();
                     }
                     tmp.remove();
                 }
             })
 
-            this.elements = {};
             component.elements.forEach(name => {
                 console.log(`[de-name="${name}"]`);
                 this.elements[name] = this.element.querySelector(`[de-name="${name}"]`);
@@ -87,6 +85,13 @@ export function componentMaker(args) {
 
             let onLoadCall = component.onLoad;
             if (onLoadCall) this.onLoad = onLoadCall.bind(this);
+            let listener = () => {
+                if (this.element.isConnected && this.onLoad) {
+                    document.body.removeEventListener("attached", listener);
+                    this.onLoad();
+                }
+            }
+            document.body.addEventListener("attached", listener);
             /****/
 
             return this;

@@ -1,1 +1,0 @@
-export var GeneratorFunction=Object.getPrototypeOf((function*(){})).constructor;

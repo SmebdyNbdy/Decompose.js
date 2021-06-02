@@ -1,6 +1,6 @@
 import { tError } from "./tError.js";
 
-window.history.pushState('{ "de$": [ "file:///Users/alexgavrikov/Developer/lampasch/ledit/ledit/test.html" ] }', "");
+window.history.replaceState(`{ "de$": [ "${location.href}" ] }`, "");
 
 let proxyState = {
     get(dest, prop) {

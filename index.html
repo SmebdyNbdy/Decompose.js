@@ -1,0 +1,231 @@
+<!doctype html>
+<html>
+<head>
+    <title>speed test</title>
+    <script type="module">
+        import { de } from "http://alexs-macbook-pro.local:5757/src/index.js";
+        de.load("http://alexs-macbook-pro.local:5757/src/t.js").then(globsDefine => {
+            globsDefine();
+        });
+        de.deps = [
+            //"http://alexs-macbook-pro.local:5757/src/t.js",
+            "http://alexs-macbook-pro.local:5757/src/icon.js",
+            "http://alexs-macbook-pro.local:5757/src/page.js",
+        ];
+        de.main = custom;
+    </script>
+</head>
+<body>
+    <de-if true>
+        <h1>FUCKYOU</h1>
+        <h2 id="idea">FUCKYOU</h2>
+        <h3>FUCKYOU</h3>
+        <de-else>
+            <h1><br>UNFUCKYOU</h1>
+        </de-else>
+    </de-if>
+    <de-compose de-page="init"></de-compose>
+
+    <script>
+        //import { de } from "http://alexs-macbook-pro.local:5757/out/decompose.modern.js";
+        function custom(de) {
+            de.state.loggedIn = false;
+            document.getElementById("idea").onclick = () => de.router.navigate("home");
+            de.page.element = document.querySelector('[de-page="init"]');
+        //(async() => await de.include("./t.js"))();
+
+        //de.compose
+        console.log(de);
+
+        de.compose
+            `<a href="${'href'}" class="${'className'}">${'label'}</a>`
+        ({
+            name: "crumb",
+            style:
+                `a {
+                    text-decoration: none;
+                    height: 16px;
+                    padding: 4px 2px;
+                    margin: 0;
+                    white-space: nowrap;
+                    font: ${de.globs.style.font16};
+                    background: none;
+                    color: ${de.globs.style.text.a100};
+                    display: inline-flex;
+
+                    &:hover {
+                        text-decoration: underline;
+                    }
+                }`,
+        });
+
+        de.compose
+            `<div class="head-brcr selnone" @parent@></div>`
+        ({
+            name: "breadcrumbs",
+            onLoad: function() {
+                this.callbacks.upd();
+            },
+            style:
+                `flex-grow: 1;
+                width: 100%;
+                div {
+                    width: 100%;
+                    height: 24px;
+                    padding: 0 0;
+                    margin: 8px 0;
+                    overflow-y: hidden;
+                    overflow-x: scroll;
+                    display: inline-flex;
+                    flex-direction: row;
+                    align-items: flex-start;
+                    user-select: none;
+                    font: ${de.globs.style.font16};
+                    border-radius: ${de.globs.style.brdr};
+                    background: ${de.globs.style.bckg.a025};
+                    & > span {
+                        height: 16px;
+                        padding: 4px 2px;
+                        font: inherit;
+                        color: ${de.globs.style.text.a100};
+                        &:first-of-type {
+                            padding-right: 0;
+                            padding-left: 6px;
+                        }
+                    }
+                }`,
+            callbacks: {
+                upd: function() {
+                    this.elements.parent.innerHTML = "";
+                    let path = location.pathname;
+                    let arr = [];
+                    let current = de.globs.conf[path];
+                    let counter = 0;
+
+                    let crumb = (args) => new de.components.crumb({
+                        href: args.url,
+                        label: args.key,
+                        className: "head-bttn",
+                    });
+
+                    let headSep = (label) => {
+                        let elem = document.createElement("span");
+                        elem.innerText = label;
+                        return elem;
+                    }
+
+                    do {
+                        arr.push({ key: current.name, url: path});
+                        path = de.globs.conf[path]["prev"];
+                        counter += 1;
+                        current = de.globs.conf[path];
+                    } while (current["prev"] !== "@root@");
+
+                    this.elements.parent.appendChild(headSep("@"));
+
+                    for (counter; counter > 0; counter--) {
+                        let temp = arr.pop();
+                        this.elements.parent.appendChild(crumb(temp).element);
+                        this.elements.parent.appendChild(headSep("/"));
+                    }
+                }
+            }
+        });
+
+        de.compose
+            `<nav class="header">
+                <${'icon1'}>
+                <${'brcr'}>
+                <de-if ${'state'}>
+                    <${'icon2'}>
+                    <de-else>
+                        <de-group>
+                            <a @login@ class="dsk">Войти</a>
+                            <a href="/profile/register/" class="dsk">Регистрация</a>
+                        </de-group>
+                    </de-else>
+                </de-if>
+            </nav>`
+        ({
+            name: "header",
+            onLoad: function() {
+                this.elements.components.brcr.onLoad();
+                de.state.props = {
+                    name: "huessos",
+                }
+                this.elements.login.onclick = () => de.router.navigate("home");
+            },
+            style: `
+            ::-webkit-scrollbar {
+                width: 0 !important;
+                display: none !important;
+            }
+            nav {
+                position: fixed;
+                top: 0;
+                left: 0;
+                z-index: 10;
+                box-sizing: border-box;
+                width: 100vw;
+                height: 40px;
+                overflow: hidden;
+                padding: 0 6px;
+                margin: 0;
+                display: grid;
+                grid-template-columns: min-content 1fr min-content;
+                grid-template-rows: 40px;
+                grid-gap: 6px;
+                font-feature-settings: ${de.globs.style.fontFeatHead};
+                background: ${de.globs.style.prim.a100};
+                box-shadow: ${de.globs.style.fly};
+                font: ${de.globs.style.font16};
+                & * {
+                    font-feature-settings: inherit;
+                    font: inherit;
+                    flex-grow: 0;
+                }
+                & > a {
+                    overflow: visible;
+                }
+                & .mob {
+                    display: none;
+                }
+                & .dsk {
+                    text-decoration: none;
+                    height: 24px;
+                    box-sizing: border-box;
+                    min-width: fit-content;
+                    padding: 4px 8px;
+                    margin: 8px 4px;
+                    line-height: 1
+                    font: ${de.globs.style.font16Bold};
+                    color: ${de.globs.style.text.a100};
+                    border-radius: ${de.globs.style.brdr};
+                    &:hover {
+                        background: ${de.globs.style.bckg.a050};
+                    }
+                }
+            }`,
+        });
+
+        let tmp = new de.components.header({
+                components: {
+                    brcr: new de.components.breadcrumbs(),
+                    icon1: new de.components.icon({
+                        icon: `arrow-big-left`
+                    }),
+                    icon2: new de.components.icon({
+                        href: `/profile/`,
+                        className: `mob`,
+                        icon: `user`,
+                    }),
+                },
+            });
+
+        de.router.head = tmp;
+
+        //document.body.appendChild(tmp.element);
+    }
+    </script>
+</body>
+</html>
