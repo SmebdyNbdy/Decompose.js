@@ -4,15 +4,15 @@ import { newComponent, components} from "./decompose/funcs/components.js";
 import { router, page } from "./decompose/router.js";
 import { state } from "./decompose/state.js";
 import { detachedCallback } from "./decompose/funcs.js";
-
+import { style } from "./decompose/classes/Template.js";
 import * as deif from "./decompose/de-if.js";
 
 export let de = {
+    style: style.insert,
     components: components,
     compose: newComponent,
     router: router,
     page: page,
-    //// TODO: router
     globs: {},
     deps: [],
     async load(url) {

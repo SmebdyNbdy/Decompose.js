@@ -40,9 +40,20 @@ export default function () {
 
         // -<< default border radius >>-
         brdr: "24px",
+    }
 
-        // -<< box shadow default >>-
-        fly: `1px 1px 4px 1px ${this.bxsh}`,
+    // -<< box shadow default >>-
+    style.fly = `1px 1px 4px 1px ${style.bxsh.a050}`;
+    style.modernShadow = (count, color) => {
+        switch (count) {
+        case 1:
+            return `0 0 0 6px ${style[color].a025}`;
+        case 2:
+            return `0 0 0 4px ${style[color].a025}, 0 0 0 8px ${style[color].a025}`;
+        case 3:
+            return `0 0 0 4px ${style[color].a075}, 0 0 0 8px ${style[color].a050}, 0 0 0 12px ${style[color].a025}`;
+        }
+
     }
 
     this.globs.conf = {
@@ -89,4 +100,20 @@ export default function () {
     }
 
     this.globs.style = style;
+
+    this.globs.pageColor = (color) => {
+        this.style(
+            `body {
+                background-color: ${color};
+            }`)
+    }
+
+    this.style(
+        `body {
+            margin: 0;
+            padding: 0;
+            font: ${style.font16};
+            padding-top: 40px;
+            transition: 2s background-color ease-out;
+        }`);
 }

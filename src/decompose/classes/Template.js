@@ -2,29 +2,29 @@ import { APPLY_PROPS, RAWC, RAWO } from "../consts/symbols.js";
 import { PROXY } from "../consts/proxy.js";
 import { findJsVars, templateToFunc, literalParser } from "../funcs.js";
 import { gid } from "../globs.js";
-import { Style } from "./Style.js";
+import { DeStyle } from "./Style.js";
+export { DeStyle } from "./Style.js";
 
-var style = new Style();
-style.setStyle({
-    "de-group": {
-        "display": "flex",
-        "flex-direction": "row",
-        "align-items": "center",
-        "justify-content": "space-evenly",
-        "align-content": "space-evenly",
-    },
-    "de-group[col]": {
-        "flex-direction": "column",
-        "justify-content": "stretch",
-    },
-    "de-group[stretch]": {
-        "align-items": "stretch",
-    },
-    "de-group[wrap]": {
-        "flex-wrap": "wrap",
-        "justify-content": "space-evenly",
-    },
-});
+export var style = new DeStyle();
+style.insert(
+    `de-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    align-content: space-evenly;
+    &[col] {
+        flex-direction: column;
+        justify-content: stretch;
+    }
+    &[stretch] {
+        align-items: stretch;
+    }
+    &[wrap] {
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+    }
+}`);
 
 export class Template {
 
@@ -83,9 +83,7 @@ export class Template {
     }
 
     setStyle(raw) {
-        this.style = literalParser(raw, `de-${this.Name}`);
-
-        style.setStyle(this.style);
+        style.insertScoped(`de-${this.Name}`, raw);
     }
 
     setName(name) {
@@ -94,11 +92,10 @@ export class Template {
         customElements.define(`de-${this.Name}`, class extends HTMLElement {
             constructor() {
                 super();
-                style.setStyle({
-                    [this.tagName]: {
-                        "display": "contents",
-                    }
-                })
+                style.insert(
+                    `${this.tagName} {
+                        display: contents;
+                    }`);
             }
         });
         this.element = document.createElement(`de-${this.Name}`);

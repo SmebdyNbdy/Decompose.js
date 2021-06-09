@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<style>
+#div1 {
+  width: 350px;
+  height: 70px;
+  padding: 10px;
+  border: 1px solid #aaaaaa;
+}
+</style>
+<script>
+function allowDrop(ev) {
+    ev.preventDefault();
+	document.querySelector("#div1").style.borderWidth = "2px";
+  ev.preventDefault();
+}
+
+function back(ev) {
+    ev.preventDefault();
+document.querySelector("#div1").style.borderWidth = "1px";
+
+}
+
+function drag(ev) {
+      ev.preventDefault();
+  ev.dataTransfer.setData("Text", ev.target.id);
+}
+
+function drop(ev) {
+      ev.preventDefault();
+console.log(ev.dataTransfer);
+document.querySelector("#div1").style.borderColor = "#00bb99";
+  var data = ev.dataTransfer.getData("Text");
+  ev.target.appendChild(document.getElementById(data));
+
+}
+</script>
+</head>
+<body>
+
+<div id="div1" ondrop="drop(event)" ondragleave="back(event)" ondragover="allowDrop(event)" ondragstart="event.preventDefault()"></div>
+<br>
+<p id="drag1" draggable="true" ondragstart="drag(event)">This is a draggable paragraph. Drag this element into the rectangle.</p>
+
+</body>
+</html>

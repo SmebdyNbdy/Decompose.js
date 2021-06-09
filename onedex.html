@@ -1,0 +1,123 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<style>
+#div1 {
+    transition: 0.4s ease-out;
+    transition-delay: 0;
+    transition-property: border-width, border-color, outline-width, outline-color, outline-offset, outline-style;
+    outline-color: #5d9db2;
+    outline-offset: 1px;
+    outline-style: solid;
+    outline-width: 1px;
+    width: 50vw;
+    height: 50vh;
+    padding: 10px;
+    border: 1px solid #5d9db2;
+}
+img {
+    width: inherit;
+    height: inherit;
+}
+#div1.ready {
+    outline-color: #00b3907f;
+    outline-style: double;
+    border: 1px solid #00b3907f;
+    outline-offset: 1px;
+    outline-width: 1px;
+}
+#div1.fail {
+    outline-color: #ff88447f;
+    outline-style: double;
+    border: 1px solid #ff88447f;
+    outline-offset: 1px;
+    outline-width: 1px;
+}
+#div1.outlined {
+    outline-offset: 2px;
+    outline-width: 2px;
+    border: 2px solid #5d9db2;
+}
+</style>
+<script>
+function allowDrop(ev) {
+	document.querySelector("#div1").className = "outlined";
+    ev.preventDefault();
+}
+
+function back(ev) {
+    ev.preventDefault();
+    document.querySelector("#div1").className = "";
+}
+
+function drag(ev) {
+  ev.dataTransfer.setData("Text", "t5");
+}
+const reader = new FileReader();
+async function readerBitch(input) {
+    let done = "pend";
+    let prom = new Promise((success, failure) => {
+        let wait = () => {
+            switch (done) {
+            case "pend":
+                setTimeout(wait, 100);
+                break;
+            case "done":
+                success(reader.result);
+                break;
+            default:
+                failure();
+            }
+        }
+        wait();
+    });
+    reader.readAsDataURL(input);
+    reader.onload = () => {
+        done = "done";
+    };
+    return prom;
+}
+function drop(ev) {
+      ev.preventDefault();
+      console.log(ev.dataTransfer);
+      if (ev.dataTransfer.files[0]) {
+          console.log(ev.dataTransfer.files[0]);
+          let pic = document.querySelector("img");
+          readerBitch(ev.dataTransfer.files[0]).then(res => {
+              console.log("tik-tok, beyotch\n" + res);
+              pic.src = res;
+              ev.target.appendChild(pic);
+              document.querySelector("#div1").className = "ready";
+          });
+      } else {
+          document.querySelector("#div1").className = "ready";
+          var data = ev.dataTransfer.getData("Text");
+          document.querySelector("#div1").appendChild(document.getElementById(data).content);
+      }
+}
+var beyotch = document.createElement('p');
+beyotch.innerText = ">";
+beyotch.onfocus = (event) => event.target.innerText="";
+
+</script>
+</head>
+<body>
+
+    <template id="t5">
+        <h1>FUCKYOU</h1>
+        <h2 id="idea">FUCKYOU</h2>
+        <h3>FUCKYOU</h3>
+        <div id="cent" contenteditable="true" onblur="console.log(`${event.target.innerText}`.replaceAll('\n', '\\n'))">
+            <h1><br>UNFUCKYOU</h1>
+            <input type="button" style="-webkit-appearance:none; border-radius: 0;" contenteditable="false" value="+" onclick="event.target.insertAdjacentElement('beforebegin', beyotch)">
+        </div>
+    </template>
+
+<div id="div1" ondrop="drop(event)" ondragleave="back(event)" ondragover="allowDrop(event)" ondragstart="event.preventDefault()">
+<img draggable="true">
+</div>
+<br>
+<p id="drag1" draggable="true" ondragstart="drag(event)">This is a draggable paragraph. Drag this element into the rectangle.</p>
+
+</body>
+</html>
