@@ -155,130 +155,93 @@
                     this.elements.components.brcr.onLoad();
                 }
             },
-            style: `
-            ::-webkit-scrollbar {
-                width: 0 !important;
-                display: none !important;
-            }
-            nav {
-                position: fixed;
-                top: 0;
-                left: 0;
-                z-index: 10;
-                box-sizing: border-box;
-                width: 100vw;
-                height: 40px;
-                overflow: hidden;
-                padding: 0 6px;
-                margin: 0;
-                display: grid;
-                grid-template-columns: min-content 1fr min-content;
-                grid-template-rows: 40px;
-                grid-gap: 6px;
-                font-feature-settings: ${de.globs.style.fontFeatHead};
-                background: ${de.globs.style.prim.a100};
-                box-shadow: ${de.globs.style.fly};
-                font: ${de.globs.style.font16};
-                & * {
-                    font-feature-settings: inherit;
-                    font: inherit;
-                    flex-grow: 0;
-                }
-                & > a {
-                    overflow: visible;
-                }
-                & .mob {
-                    display: none;
-                }
-                & > de-group > a {
-                    text-decoration: none;
-                    height: 24px;
+            style:
+                `nav {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    z-index: 10;
                     box-sizing: border-box;
-                    min-width: fit-content;
-                    padding: 4px 8px;
-                    margin: 8px 4px;
-                    line-height: 1;
-                    font: ${de.globs.style.font16Bold};
-                    color: ${de.globs.style.text.a100};
-                    border-radius: ${de.globs.style.brdr};
-                    &:hover, &:active {
-                        background: ${de.globs.style.bckg.a050};
+                    width: 100vw;
+                    height: 40px;
+                    overflow: hidden;
+                    padding: 0 6px;
+                    margin: 0;
+                    display: grid;
+                    grid-template-columns: min-content 1fr min-content;
+                    grid-template-rows: 40px;
+                    grid-gap: 6px;
+                    font-feature-settings: ${de.globs.style.fontFeatHead};
+                    background: ${de.globs.style.prim.a100};
+                    box-shadow: ${de.globs.style.fly};
+                    font: ${de.globs.style.font16};
+                    & * {
+                        font-feature-settings: inherit;
+                        font: inherit;
+                        flex-grow: 0;
                     }
-                }
-            }`,
+                    & > a {
+                        overflow: visible;
+                    }
+                    & .mob {
+                        display: none;
+                    }
+                    & > de-group > a {
+                        text-decoration: none;
+                        height: 24px;
+                        box-sizing: border-box;
+                        min-width: fit-content;
+                        padding: 4px 8px;
+                        margin: 8px 4px;
+                        line-height: 1;
+                        font: ${de.globs.style.font16Bold};
+                        color: ${de.globs.style.text.a100};
+                        border-radius: ${de.globs.style.brdr};
+                        &:hover, &:active {
+                            background: ${de.globs.style.bckg.a050};
+                        }
+                    }
+                }`,
         });
 
         de.compose
-`<form id="login" method="POST" class="form-card selnone" data-cid="form">
-    <fieldset data-cid="username">
-        <legend class="inpt-labl" data-cid="legend">Email:</legend>
-        <label for="username">
-            <input class="inpt-box" type="email" name="username" id="username" placeholder=" " data-cid="input">
-        </label>
-    </fieldset>
-    <fieldset data-cid="password">
-        <legend class="inpt-labl" data-cid="legend">Пароль:</legend>
-        <label for="password">
-            <input class="inpt-box frgt" id="password" name="password" type="password" placeholder=" " data-cid="input">
-            <input class="inner" type="button" value="Забыли?" data-cid="innerButton">
-        </label>
-    </fieldset>
-    <fieldset class="click submit">
-        <label>
-            <input id="submit" class="inpt-bttn" value="Войти" type="submit" data-cid="input">
-        </label>
-    </fieldset>
-    <fieldset class="click">
-        <legend class="inpt-labl" data-cid="legend">Нет учетной записи?</legend>
-        <label>
-            <input class="inpt-bttn" value="Зарегистрироваться" type="button" data-cid="input">
-        </label>
-    </fieldset>
-</form>`
-({
-    name: "form",
-    style:
-    `form {
-        background-color: ${de.globs.style.prim.a100};
-        display: grid;
-        width: fit-content;
-        margin: 12px auto;
-        padding: 16px 8px;
-        grid-template-columns: 1fr;
-        grid-template-rows: repeat(4, 1fr);
-        grid-gap: 16px;
-        box-shadow: ${de.globs.style.modernShadow(3, "prim")};
-        border-radius: ${de.globs.style.brdr};
-
-        & fieldset {
-            border: none;
-            box-sizing: border-box;
-            width: 100%;
-            display: grid;
-            grid-template-columns: 1fr;
-            grid-template-rows: 1fr;
-
-            & legend {
-                padding-bottom: 8px;
-                font: ${de.globs.style.font16Bold};
-            }
-
-            & > label {
-                padding: 0;
-                background: ${de.globs.style.bckg.a050};
-                transition: 0.4s box-shadow ease;
-                box-shadow: ${de.globs.style.modernShadow(1, "bckg")};
-                display: flex;
-                flex-direction: row;
-                justify-content: stretch;
-                align-items: stretch;
-                border-radius: ${de.globs.style.brdr};
-
-                &:focus-within {
-                    background: ${de.globs.style.bckg.a075};
-                    box-shadow: ${de.globs.style.modernShadow(2, "bckg")};
+            `<fieldset>
+                <legend>${"caption"}</legend>
+                <label for="${"id"}">
+                    <input @watch@ type="${"type"}" name="${"id"}" id="${"id"}" placeholder=" ">
+                    <de-if ${"ib"}>
+                        <input class="inner" type="button" value="${"ibValue"}">
+                    </de-if>
+                </label>
+            </fieldset>`
+        ({
+            name: "textfield",
+            observables: {
+                value: ""
+            },
+            onLoad: function() {
+                this.elements.watch.oninput = (ev) => {
+                    console.log(ev.target.value);
+                    this.observables.value = ev.target.value;
+                };
+            },
+            style:
+                `label {
+                    padding: 0;
+                    background: ${de.globs.style.bckg.a050};
+                    transition: 0.4s box-shadow ease;
+                    box-shadow: ${de.globs.style.modernShadow(1, "bckg")};
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: stretch;
+                    align-items: stretch;
+                    border-radius: ${de.globs.style.brdr};
+                    &:focus-within {
+                        background: ${de.globs.style.bckg.a075};
+                        box-shadow: ${de.globs.style.modernShadow(2, "bckg")};
+                    }
                 }
-                & input.inner {
+                .inner {
                     flex-grow: 0;
                     flex-shrink: 1;
                     min-width: fit-content;
@@ -292,47 +255,113 @@
                     &:active {
                         background: none;
                     }
+                }`
+        });
+
+        de.compose
+            `<fieldset @fs@ >
+                <de-if ${"caption"}>
+                    <legend>${"captionValue"}</legend>
+                </de-if>
+                <label>
+                    <input @click@ value="${"text"}" type="${"type"}">
+                </label>
+            </fieldset>`
+        ({
+            name: "clickfield",
+            observables: {
+                clicked: false,
+            },
+            onLoad: function() {
+                this.elements.click.onclick = (ev) => {
+                    this.observables.clicked = true;
+                    console.log("clicked");
+                };
+                if (this.properties.caption === "false") {
+                    this.elements.fs.className = "noleg";
                 }
-            }
-            & input {
-                flex-grow: 1;
-                min-width: 1px;
-                padding: 4px 8px;
-                height: 24px;
-                margin: 0;
-                font: ${de.globs.style.font16};
-                background: none;
-                border: none;
-                -webkit-appearance: none;
-                border-radius: ${de.globs.style.brdr};
-                transition: 0.4s box-shadow ease, 0.4s background ease;
-                &:focus {
-                    outline: none;
+            },
+            style:
+                `.noleg {
+                    margin: 12px 0;
                 }
-                &:active {
-                    color: inherit;
-                }
-            }
-            &.submit {
-                margin: 12px 0;
-            }
-            &.click label {
-                margin-top: 8px;
-                padding: 0;
-                background: ${de.globs.style.bckg.a025};
-                box-shadow: ${de.globs.style.modernShadow(1, "bckg")};
-                &:hover {
-                    background: ${de.globs.style.bckg.a050};
-                    box-shadow: ${de.globs.style.modernShadow(2, "bckg")};
-                }
-                &:active {
-                    background: ${de.globs.style.bckg.a050};
+                label {
+                    padding: 0;
+                    transition: 0.4s box-shadow ease;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: stretch;
+                    align-items: stretch;
+                    border-radius: ${de.globs.style.brdr};
+                    margin-top: 8px;
+                    background: ${de.globs.style.bckg.a025};
                     box-shadow: ${de.globs.style.modernShadow(1, "bckg")};
+                    &:hover, &:active {
+                        background: ${de.globs.style.bckg.a050};
+                    }
+                    &:hover {
+                        box-shadow: ${de.globs.style.modernShadow(2, "bckg")};
+                    }
+                    &:active {
+                        box-shadow: ${de.globs.style.modernShadow(1, "bckg")};
+                    }
+                }`
+        })
+
+        console.log(de);
+
+        de.compose
+            `<form id="login" method="POST" class="form-card selnone" data-cid="form">
+                <${"username"}>
+                <${"password"}>
+                <${"login"}>
+                <${"toRegistration"}>
+            </form>`
+        ({
+            name: "form",
+            style:
+                `form {
+                    background-color: ${de.globs.style.prim.a100};
+                    display: grid;
+                    width: fit-content;
+                    margin: 12px auto;
+                    padding: 16px 8px;
+                    grid-template-columns: 1fr;
+                    grid-template-rows: repeat(4, 1fr);
+                    grid-gap: 16px;
+                    box-shadow: ${de.globs.style.modernShadow(3, "prim")};
+                    border-radius: ${de.globs.style.brdr};
                 }
-            }
-        }
-    }`
-});
+                fieldset {
+                    border: none;
+                    box-sizing: border-box;
+                    width: 100%;
+                    display: grid;
+                    grid-template-columns: 1fr;
+                    grid-template-rows: 1fr;
+                }
+                legend {
+                    padding-bottom: 8px;
+                    font: ${de.globs.style.font16Bold};
+                }
+                input {
+                    flex-grow: 1;
+                    min-width: 1px;
+                    padding: 4px 8px;
+                    height: 24px;
+                    margin: 0;
+                    font: ${de.globs.style.font16};
+                    background: none;
+                    border: none;
+                    -webkit-appearance: none;
+                    border-radius: ${de.globs.style.brdr};
+                    transition: 0.4s box-shadow ease, 0.4s background ease;
+                    &:focus, &:active {
+                        outline: none;
+                        color: inherit;
+                    }
+                }`
+        });
 
         let tmp = new de.components.header({
                 components: {
@@ -348,8 +377,37 @@
                 },
             });
 
+        let temp1 = new de.components.form({
+            components: {
+                username: new de.components.textfield({
+                    caption: "Email:",
+                    id: "username",
+                    type: "email",
+                    ib: "false",
+                }),
+                password: new de.components.textfield({
+                    caption: "Пароль:",
+                    id: "password",
+                    type: "password",
+                    ib: "true",
+                    ibValue: "Забыли?",
+                }),
+                login: new de.components.clickfield({
+                    caption: "false",
+                    text: "Войти",
+                    type: "submit",
+                }),
+                toRegistration: new de.components.clickfield({
+                    caption: "true",
+                    captionValue: "Нет учетной записи?",
+                    text: "Зарегистрироваться",
+                    type: "button",
+                })
+            }
+        });
+
         de.router.head = tmp;
-        document.body.appendChild(new de.components.form().element);
+        document.body.appendChild(temp1.element);
 
         //document.body.appendChild(tmp.element);
     }

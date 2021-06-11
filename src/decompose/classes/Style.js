@@ -1,39 +1,20 @@
-import { ELEMENT, SHEET, RULES, QUERIES } from "../consts/symbols.js";
-import { PROXY } from "../consts/proxy.js";
-import { tError } from "../tError.js";
+import { ELEMENT, SHEET } from "../consts/symbols.js";
 
-function ampersander(regex, input, replacer) {
-    let output = input;
-    while (output.match(regex)) {
-        output = output.replace(regex, replacer);
-    }
-    return output;
-}
-
-function globalApplier(input) {
-    let regexMediaRules = /([a-zA-Z0-9.:#\[="\]~>+ ,]+)(?:\s+{)((?:\s*(?:[a-zA-Z0-9-]+):.+;)*)(\s*@[a-zA-Z0-9: ()%&]+\s*{\s*)(?:\s*)(\s*[&a-zA-Z0-9.:#\[="\]~>+ ,]+)(?:\s+{)((?:(?:\s*(?:[a-zA-Z0-9-]+):.+;)|(?:\s*&[^&{}]+{[^}]+}))*\s*})/;
-    let regexAmpersandNesting = /^\s*([a-zA-Z0-9.:#\[="\]~>+ ,]+)(?:\s+{)((?:\s*(?:[a-zA-Z0-9-]+):.+;)*)(?:\s*)(\s*[&a-zA-Z0-9.:#\[="\]~>+ ,]+)(?:\s+{)((?:(?:\s*(?:[a-zA-Z0-9-]+):.+;)|(?:\s*&[^&{}]+{[^}]+}))*\s*})/m;
-    let regexCleanUp = /@[a-zA-Z0-9: ()%&]+\s*{\s*\s*}/g;
-    let queries =  /([a-zA-Z0-9.:#\[="\]~>+ ,]+)(?:\s+{)((?:\s*(?:[a-zA-Z0-9-]+):.+;)*)(\s*@[a-zA-Z0-9: ()%&]+\s*{\s*)(?:\s*)(\s*[&a-zA-Z0-9.:#\[="\]~>+ ,]+)(?:\s+{)((?:(?:\s*(?:[a-zA-Z0-9-]+):.+;)|(?:\s*&[^&{}]+{[^}]+}))*\s*})/;
-    let output = ampersander(regexMediaRules, input, replacer1);
-    let nestong = /^\s*([a-zA-Z0-9.:#\[="\]~>+ ,]+)(?:\s+{)((?:\s*(?:[a-zA-Z0-9-]+):.+;)*)(?:\s*)(\s*[&a-zA-Z0-9.:#\[="\]~>+ ,]+)(?:\s+{)((?:(?:\s*(?:[a-zA-Z0-9-]+):.+;)|(?:\s*&[^&{}]+{[^}]+}))*\s*})/m;
-    output = ampersander(regexCleanUp, output, () => "");
-    output = ampersander(regexAmpersandNesting, output, replacer2);
-    console.log(output);
-    return output;
-}
-
-export class DeStyle {
+export class Style {
 
     static get regex() {
         return {
-            nestRegularize: /(@nest)([^{\n]+{[^}]+})/g,
-            nesting: /(^|;|})\s*([\w-.#:[="\]~>+ ,*]*[\w-\]*])(?:\s*{)((?:\s*(?:[\w-]+):[^;]+;)*)(?:\s*)(\s*[&\w-.#:[="\]~>+ ,*]*[\w-\]*])(?:\s*{)((?:(?:\s*(?:[\w-]+):[^;]+;)|(?:\s*&[^{}]+{[\s\S]*?}))*\s*})/,
-            ///(^|;|})\s*([\w-.#:[="\]~>+ ,*]*[\w-\]*])(?:\s*{)((?:\s*(?:[\w-]+):[^;]+;)*)(?:\s*)(\s*[&\w-.#:[="\]~>+ ,*]*[\w-\]*])(?:\s*{)((?:(?:\s*(?:[\w-]+):[^;]+;)|(?:\s*&\s*[&\w-.#:[="\]~>+ ,*]*[\w-\]*]\s*{[^}]*}))*)\s*}/,
-            cleanup: /@[\w-:( )%&]+\s*{\s*\s*}/g,
-            nestCleanup: /(@nest\s?{\s?)(?:(?:|[^{}]|{[^{}]*})+)(\s})/g,
-            queries: /([\w-.#:[="\]~>+ ,*]*[\w-\]*])(?:\s*{)((?:(?:[^{@}]*)|(?:[^{@}]*{[\s\S]*?}[^{@}]*))*)(\s*@[\w-:( )%&]+\s*{\s*)(?:\s*)(\s*[&\w-.#:[="\]~>+ ,*]*[\w-\]*])(?:\s*{)((?:(?:\s*(?:[\w-]+):[^;]+;)|(?:\s*&[^&{}]+{[\s\S]*?}))*\s*})\s*}/,
-            scope: /((?:^|})\s*)([^&{,}]*(?:{|,))/,
+            //atNest: /(@nest)([^{\n]+{[^}]+})/g,
+            //oldNesting: /(^|;|})\s*([\w\-.#:[="\]~>+ ,*]*[\w\-\]*])(?:\s*{)((?:\s*(?:[\w-]+):[^;]+;)*)(?:\s*)(\s*[&\w\-.#:[="\]~>+ ,*]*[\w\-\]*])(?:\s*{)((?:(?:\s*(?:[\w-]+):[^;]+;)|(?:\s*&[^{}]+{[\s\S]*?}))*\s*})/,
+            nesting: /(\s*§)([^{@§}]+)(§\s*{\s*)((?:[-\w]+:[^;]+;\s*)*)(§)([^{§}]+)(§\s*{\s*(?:[-\w]+:[^;]+;\s*)*})/,
+            //queryCleanup: /@[\w\-:( )%&]+\s*{\s*}/g,
+            cleanup: /\s*§[^{§}]+§\s*{\s*}/g,
+            //nestCleanup: /(@nest\s?{\s?)(?:(?:|[^{}]|{[^{}]*})+)(\s})/g,
+            //oldQueries: /([\w\-.#:[="\]~>+ ,*]*[\w\-\]*])(?:\s*{)((?:(?:[^{@}]*)|(?:[^{@}]*{[\s\S]*?}[^{@}]*))*)(\s*@[\w\-:( )%&]+\s*{\s*)(?:\s*)(\s*[&\w\-.#:[="\]~>+ ,*]*[\w\-\]*])(?:\s*{)((?:(?:\s*(?:[\w-]+):[^;]+;)|(?:\s*&[^&{}]+{[\s\S]*?}))*\s*})\s*}/,
+            queries: /(§[^{§@}]+§)(\s*{.*[^{§@}]*)(§@[^§@]+§)(\s*{)((?:\s*§[^{§}]*§\s*{(?:\s*[\w-]+:[^;]*;)*\s*})*)(\s*})/,
+            markSelectors: /(^|;|{|})(?:\s*)([\w\-#.[\]="~>+:@&]+[@&\w\-#.,[\]="~>+ :]*[&\w\]*])(?:\s*)(?={)/g,
+            unmarkSelectors: /§([^{§}]+)§/g,
+            scope: /((?:^|})\s*)([^@&{,}]*)(?={|,)/,
             separate: /(^)(\s*[^{}]*{)((?:[^{}]*)|(?:[^{}]*{[^{}]*})*)(\s*})/,
         }
     }
@@ -42,11 +23,12 @@ export class DeStyle {
         return (input) => {
             return input.replaceAll(/\s+/g, " ")
                 .replaceAll(/(\s*)(\{|\}|;)(\s*)/g, "$2 ")
-                .replaceAll(DeStyle.regex.nestRegularize, "$1 {$2}");
+                .replaceAll("@nest", "")
+                .replaceAll(Style.regex.markSelectors, "$1 §$2§");
         }
     }
 
-    static get replaceNesting() {
+    static get oldReplaceNesting() {
         return (_, $1, $2, $3, $4, $5) => {
             let replacement = $2.split(",");
             let target = $4.split(",");
@@ -57,12 +39,11 @@ export class DeStyle {
                     result.push(target[f].replace("&", sel));
                 }
             }
-            console.log(`${$1}${result.join(",")} {${$5}${$2} {${$3}`);
             return `${$1}${result.join(",")} {${$5}${$2} {${$3}`;
         }
     }
 
-    static get replaceQueries() {
+    static get oldReplaceQueries() {
         return (_, $1, $2, $3, $4, $5) => {
             let replacement = $1.split(",");
             let target = $4.split(",");
@@ -79,6 +60,27 @@ export class DeStyle {
         }
     }
 
+    static get replaceQueries() {
+        return "$3$4 $1 {$5$6 } $1$2";
+    }
+
+    static get replaceNesting() {
+        return (_, $1, $2, $3, $4, $5, $6, $7) => {
+            let replacementRaw = $2.replaceAll("§", "");
+            let targetRaw = $6.replaceAll("§", "");
+            let replacement = replacementRaw.split(",");
+            let target = targetRaw.split(",");
+            let result = [];
+            for (let e in replacement) {
+                let sel = replacement[e];
+                for (let f in target) {
+                    result.push(target[f].replace("&", sel));
+                }
+            }
+            return `${$1}${$2}${$3}${$4}}${$1}${result.join(",")}${$7}${$1}${$2}${$3}`;
+        }
+    }
+
     constructor() {
         this[ELEMENT] = document.createElement("style");
         this[ELEMENT].id = "de-style";
@@ -88,103 +90,48 @@ export class DeStyle {
 
     get insertRule() {
         return ($amp) => {
-            console.log("inserting:\n" + $amp);
             this[SHEET].insertRule($amp);
             return "";
         }
     }
 
     insert(rule) { //мы преобритем ботиночьки!!!!!!!
-        let output = DeStyle.normalize(rule);
+        let output = Style.normalize(rule);
+        let t0 = Date.now();
 
         let cyclicApply = (regex, replacer) => {
             while (output.match(regex)) {
                 output = output.replace(regex, replacer);
             }
-            console.log(output);
+            output = output.replaceAll(Style.regex.cleanup, "");
             return output;
         };
-        cyclicApply(DeStyle.regex.queries, DeStyle.replaceQueries);
-        cyclicApply(DeStyle.regex.cleanup, () => "");
-        cyclicApply(DeStyle.regex.nestCleanup, () => "");
+        cyclicApply(Style.regex.nesting, Style.replaceNesting);
         console.log(output);
-        cyclicApply(DeStyle.regex.nesting, DeStyle.replaceNesting);
+        if (output.includes("@")) {
+            cyclicApply(Style.regex.queries, Style.replaceQueries);
+            console.log(output);
+            cyclicApply(Style.regex.nesting, Style.replaceNesting);
+            console.log(output);
+        }
+        output = output.replaceAll(Style.regex.unmarkSelectors, "$1");
         console.log(output);
-        cyclicApply(DeStyle.regex.separate, this.insertRule);
+        cyclicApply(Style.regex.separate, this.insertRule);
         console.log(output);
 
+        let t1 = Date.now();
+        console.log(`stylesheet build time is ${(t1-t0)/100} s`)
         return this;
     }
 
     insertScoped(scope, rule) {
-        let scopedRule = DeStyle.normalize(rule);
-        //this.insert(scopedRule)
-        while (scopedRule.match(DeStyle.regex.scope)) {
-            scopedRule = scopedRule.replace(DeStyle.regex.scope, "$1& $2");
+        let scopedRule = rule.replaceAll(/\s+/g, " ");
+        console.log(scopedRule);//Style.normalize(rule);
+        while (scopedRule.match(Style.regex.scope)) {
+            scopedRule = scopedRule.replace(Style.regex.scope, "$1& $2");
         }
         scopedRule = `${scope} { ${scopedRule} }`;
         console.log(scopedRule);
         return this.insert(scopedRule);
-    }
-}
-
-export class Style {
-    constructor() {
-        this[ELEMENT] = document.createElement("style");
-        this[ELEMENT].id = "destyle";
-        document.head.appendChild(this[ELEMENT]);
-
-        let rules = Object.create(null);
-        rules[SHEET] = this[ELEMENT].sheet;
-        console.log(rules);
-
-        this[RULES] = new Proxy(rules, PROXY.style);
-        this[QUERIES] = {
-            rules: Object.create(null),
-            new(sel) {
-                let index = rules[SHEET].cssRules.length;
-                rules[SHEET].insertRule(sel + " {}", index);
-
-                let newDest = Object.create(null);
-                newDest[SHEET] = rules[SHEET].cssRules[index];
-
-                this.rules[sel] = new Proxy(newDest, PROXY.style);
-                return this.rules[sel];
-            }
-        }
-    }
-
-    setStyle(styleObject) {
-        let setSelector = (selector, props) => {
-            Object.entries(props).forEach( ([key, value]) => {
-                if (typeof value !== "object") {
-                    this[RULES][selector](key, value);
-                } else {
-                    setAtRule(selector, props);
-                }
-            })
-        }
-        let setAtRule = (selector, props) => {
-            this[QUERIES].new(selector);
-            Object.entries(props).forEach( ([key, value]) => {
-                Object.entries(value).forEach( ([k, v]) => {
-                    if (typeof v !== "object") {
-                        this[QUERIES].rules[selector][key](k, v);
-                    } else {
-                        tError.e903(v);
-                    }
-                });
-            })
-        }
-
-        Object.entries(styleObject).forEach( ([key, value]) => {
-            console.log(`errHere ${key}::${value}`)
-            if (key.startsWith("@")) {
-                console.log("errHere" + key + "::" + value)
-                setAtRule(key, value);
-            } else {
-                setSelector(key, value);
-            }
-        });
     }
 }

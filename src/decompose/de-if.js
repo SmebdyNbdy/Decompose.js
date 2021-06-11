@@ -4,7 +4,7 @@ class deIf extends HTMLElement {
         console.log(this.attributes);
         let dElse = this.querySelector("de-else");
         if (this.attributes.true) {
-            dElse.remove();
+            if (dElse) dElse.remove();
             while (this.childElementCount > 0) {
                 let child = this.children[0];
                 child.remove();
@@ -13,10 +13,12 @@ class deIf extends HTMLElement {
             this.remove()
             return this;
         } else {
-            while (dElse.childElementCount > 0) {
-                let child = dElse.children[0];
-                child.remove();
-                this.insertAdjacentElement("beforebegin", child);
+            if (dElse) {
+                while (dElse.childElementCount > 0) {
+                    let child = dElse.children[0];
+                    child.remove();
+                    this.insertAdjacentElement("beforebegin", child);
+                }
             }
             this.remove();
             return this;

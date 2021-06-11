@@ -1,11 +1,10 @@
 import { APPLY_PROPS, RAWC, RAWO } from "../consts/symbols.js";
 import { PROXY } from "../consts/proxy.js";
-import { findJsVars, templateToFunc, literalParser } from "../funcs.js";
+import { findJsVars, templateToFunc } from "../funcs.js";
 import { gid } from "../globs.js";
-import { DeStyle } from "./Style.js";
-export { DeStyle } from "./Style.js";
+import { Style } from "./Style.js";
 
-export var style = new DeStyle();
+export var style = new Style();
 style.insert(
     `de-group {
     display: flex;
@@ -93,7 +92,7 @@ export class Template {
             constructor() {
                 super();
                 style.insert(
-                    `${this.tagName} {
+                    `${this.tagName.toLowerCase()} {
                         display: contents;
                     }`);
             }
